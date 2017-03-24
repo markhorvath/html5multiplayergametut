@@ -16,7 +16,7 @@
     });
 
     document.onkeydown = function(event) {
-        if(event.keyCode == 68)
+        if(event.keyCode === 68)
             socket.emit('keyPress', {inputId: 'right', state: true});
         else if(event.keyCode === 65)
             socket.emit('keyPress', {inputId: 'left', state: true});

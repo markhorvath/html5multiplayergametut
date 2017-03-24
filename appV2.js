@@ -15,18 +15,19 @@ var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 
 var Player = function(id) {
-    var self = {
-        x: 250,
-        y: 250,
-        id: id,
-        number: "" + Math.floor(10 * Math.random()),
-        pressingRight: false,
-        pressingLeft: false,
-        pressingUp: false,
-        pressingDown: false,
-        maxSpd: 10
-    };
-    self.updatePosition = function() {
+        this.x = 250;
+        this.y = 250;
+        this.id = id;
+        this.number = "" + Math.floor(1000 * Math.random());
+        this.pressingRight = false;
+        this.pressingLeft = false;
+        this.pressingUp = false;
+        this.pressingDown = false;
+        this.maxSpd = 10
+};
+
+Player.prototype.updatePosition = function() {
+    var self = this;
         if(self.pressingRight)
             self.x += self.maxSpd;
         if(self.pressingLeft)
@@ -35,8 +36,6 @@ var Player = function(id) {
             self.y -= self.maxSpd;
         if(self.pressingDown)
             self.y += self.maxSpd;
-    };
-    return self;
 };
 
 var io = require('socket.io')(serv, {});
@@ -44,7 +43,7 @@ io.sockets.on('connection', function(socket){
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
-    var player = Player(socket.id);
+    var player = new Player(socket.id);
     PLAYER_LIST[socket.id] = player;
 
     socket.on('disconnect', function(){
