@@ -46,7 +46,6 @@ var Player = function(id){
         super_update();
     }
 
-
     self.updateSpd = function(){
         if(self.pressingRight)
             self.spdX = self.maxSpd;
@@ -132,6 +131,8 @@ Bullet.update = function(){
     }
     return pack;
 }
+//if this is on a real public server DEBUG must be set to false otherwise it will crash
+var DEBUG = true;
 
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
@@ -145,8 +146,20 @@ io.sockets.on('connection', function(socket){
         Player.onDisconnect(socket);
     });
 
+    socket.on('sendMsgToServer',function(data){
+        var playerName = ("" + socket.id).slice(2,7);
+        for (var i in SOCKET_LIST) {
+            SOCKET_LIST[i].emit('addToChat', playerName + ':' + data);
+        }
+    });
 
-
+    socket.on('evalServer',function(data){
+        if(!DEBUG) {
+            return;
+        }
+        var res = eval(data);
+        socket.emit('evalAnswer', res);
+    });
 
 });
 
