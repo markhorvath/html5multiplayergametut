@@ -1,3 +1,7 @@
+var mongojs = require('mongojs');
+var db = mongojs('localhost:27017/myGame', ['account', 'progress']);
+
+db.account.insert({username: 'b', password: 'bb'});
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
@@ -164,23 +168,31 @@ var DEBUG = true;
 
 var USERS = {};
 
+//callbacks used to simulate how this code would really work with a database, which is async
 var isValidPassword = function(data, cb) {
-    setTimeout(function(){
-        cb(USERS[data.username] === data.password);
-    },10);
+    db.account.find({username:data.username, password:data.password}, function(err, res){
+        if(res.length > 0) {
+            cb(true);
+        } else {
+            cb(false);
+        }
+    });
 };
 
 var isUserNameTaken = function(data, cb) {
-    setTimeout(function(){
-        cb(USERS[data.username]);
-    },10);
+    db.account.find({username:data.username}, function(err, res){
+        if(res.length > 0) {
+            cb(true);
+        } else {
+            cb(false);
+        }
+    });
 };
 
 var addUser = function(data, cb) {
-    setTimeout(function(){
-        USERS[data.username] = data.password;
+    db.account.insert({username:data.username, password:data.password}, function(err){
         cb();
-    },10);
+    });
 };
 
 var io = require('socket.io')(serv,{});

@@ -1,0 +1,45 @@
+
+myGame
+    account
+        {username: 'bob', password: 'pass'}
+        {username: 'bob2', password: 'pass2'}
+        {username: 'bob3', password: 'pass3'}
+    progress
+        {username: 'bob', level: 123, questComplete: ['myQuest', 'myQuest2']}
+        {username: 'bob2', level: 1, questComplete: ['myQuest', 'myQuest2']}
+
+
+create database:
+    use <DATABASE_NAME>
+    use myGame
+
+create collection
+    db.createCollection("account");
+    db.createCollection("progress");
+
+add document
+    db.account.insert({username: 'bob', password: 'pass'});
+    db.account.insert({username: 'bob2', password: 'pass2'});
+    db.progress.insert({username: 'bob', level: 123, questComplete: ['myQuest', 'myQuest2']});
+
+read document
+    db.<COLLECTION>.find(<MUST MATCH>);
+    db.account.find({username: 'bob'});
+    db.progress.find({username: 'bob'});
+
+    db.<COLLECTION>.find(<MUST MATCH>,<TO RETRIEVE>);
+
+
+update document
+    db.progress.update({username: 'bob'}, {$set: {level: 99}});
+
+mongod in bin directory of mongo
+    type mongod in terminal
+    to exit type ctrl + C
+    to see if any mongod are already running type ps aux | grep mongo
+    to kill type kill id#  (where id# is 5 digits, one of the first things that shows after ps aux grep mongo)
+
+mongo in terminal
+    open new shell and just type mongo to get server running
+    this is where you can issue mongo commands
+    type quit() to exit
